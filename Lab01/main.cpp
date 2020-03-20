@@ -1,9 +1,7 @@
-// Lab01.cpp : Ten plik zawiera funkcjê „main”. W nim rozpoczyna siê i koñczy wykonywanie programu.
 
-
-#include "pch.h"
 #include <iostream>
 #include<stdio.h>
+#include<stdlib.h>
 #include <math.h>
 #include <cmath>
 #include <fstream>
@@ -36,36 +34,34 @@ double f4(double t)
 	return y4;
 }
 
-double f5(double t)
+double f5_1(double t)
 {
 	double y5 = 0;
-	if (t >= 0 && t < 0.22)
-	{
-		y5 = (1 - 7 * t)*sin((2 * M_PI*t * 10) / (t + 0.04));
-		return y5;
-	}
-	else if (t >= 0.22 && t < 0.7)
-	{
-		y5 = 0.63*t*sin(125 * t);
-		return y5;
-	}
-	else if (t >= 0.7 && t <= 1.0)
-	{
-		y5 = pow(t, -0.662) + 0.77*sin(8 * t);
-		return y5;
-	}
-	
-
+	y5 = (1 - 7 * t)*sin((2 * M_PI*t * 10) / (t + 0.04));
+	return y5;
 }
+double f5_2(double t)
+{
+	double y5 = 0;
+	y5 = 0.63*t*sin(125 * t);
+	return y5;
+}
+double f5_3(double t)
+{
+	double y5 = 0;
+	y5 = pow(t, -0.662) + 0.77*sin(8 * t);
+	return y5;
+}
+
 double f6(double t)
 {
 	double N = 2;
 	double y6 = 0;
-		for (double n = 1; n <= N; n++)
-		{
-			y6 += cos(12 * t*(n*n) + cos(16 * t*n)) / (n*n);
-		}
-		return y6;
+	for (double n = 1; n <= N; n++)
+	{
+		y6 += cos(12 * t*(n*n) + cos(16 * t*n)) / (n*n);
+	}
+	return y6;
 }
 double f7(double t)
 {
@@ -90,8 +86,8 @@ double f8(double t)
 }
 int main()
 {
-	
-	
+
+
 	double x1, x2;
 
 	double delta = (b*b) - 4 * (a*c);
@@ -111,7 +107,7 @@ int main()
 	function1.open("f1.csv");
 	for (double t = -10; t <= 10; t += 0.01)
 	{
-		function1 << f1(t)<<","<<t<<std::endl;
+		function1 << f1(t) << "," << t << std::endl;
 	}
 	function1.close();
 	std::ofstream function2;
@@ -139,13 +135,30 @@ int main()
 	}
 	function4.close();
 
-	std::ofstream function5;
-	function5.open("f5.csv");
+	std::ofstream function5_1;
+	std::ofstream function5_2;
+	std::ofstream function5_3;
+	function5_1.open("f5.csv");
+	function5_2.open("f5_2.csv");
+	function5_3.open("f5_3.csv");
 	for (double t = 0; t <= 1; t += krok)
 	{
-		function5 << f5(t) << "," << t << "\n";
+		if (t >= 0 && t < 0.22)
+		{
+			function5_1 << f5_1(t) << "," << t << "\n";
+		}
+		else if (t >= 0.22 && t < 0.7)
+		{
+			function5_2 << f5_2(t) << "," << t << "\n";
+		}
+		else if (t >= 0.7 && t <= 1.0)
+		{
+			function5_3 << f5_3(t) << "," << t << "\n";
+		}
 	}
-	function5.close();
+	function5_1.close();
+	function5_2.close();
+	function5_3.close();
 
 	std::ofstream function6;
 	function6.open("f6.csv");
