@@ -20,6 +20,7 @@ double sygnal(double a,double f,double ro,double t)
 }
 vector<DFT_Coeff> dft(int N,vector<double>x){
     DFT_Coeff dft_value;
+    N=x.size();
     vector<DFT_Coeff>complex(N);
     for(int j=0;j<N;j++){
         complex[j]=dft_value;
@@ -31,10 +32,11 @@ vector<DFT_Coeff> dft(int N,vector<double>x){
 }
 vector<double> idft(int N,vector<DFT_Coeff>x)
 {
+    N=x.size();
     vector<double>out(N);
     for(int j=0;j<N;j++){
         out[j]=0;
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < N;i++) {
             out[j] += ((double)1/(double)N)*(x[i].real * (cos(((-1)*2 * PI * j * i) / N))+
                     x[i].img * (sin(((-1)*2 * PI * j * i) / N)));
         }}
@@ -80,7 +82,12 @@ int main() {
     plik1.close();
     vector<double> idftfun(N);
     idftfun=idft(N,complex);
-    for (size_t j = 0; j < 200; j++) {
-        cout<<idftfun[j]<<endl;
+    plik1.open("idft.csv");
+    cout<<idftfun.size();
+    int iterator=0;
+    for (double j = 0; j<1; j=j+((double)1/(double)idftfun.size())) {
+        plik1<<idftfun[iterator]<<","<<j<<endl;
+        iterator++;
     }
+    plik1.close();
 }
