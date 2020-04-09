@@ -29,6 +29,18 @@ vector<DFT_Coeff> dft(int N,vector<double>x){
         }}
     return complex;
 }
+vector<double> idft(int N,vector<DFT_Coeff>x)
+{
+    vector<double>out(N);
+    for(int j=0;j<N;j++){
+        out[j]=0;
+        for (int i = 0; i < N; i++) {
+            out[j] += ((double)1/(double)N)*(x[i].real * (cos(((-1)*2 * PI * j * i) / N))+
+                    x[i].img * (sin(((-1)*2 * PI * j * i) / N)));
+        }}
+    return out;
+
+}
 int main() {
     int N = 20;
     double a;
@@ -66,4 +78,9 @@ int main() {
         plik1 << decybel<< "," << j << endl;
     }
     plik1.close();
+    vector<double> idftfun(N);
+    idftfun=idft(N,complex);
+    for (size_t j = 0; j < 200; j++) {
+        cout<<idftfun[j]<<endl;
+    }
 }
