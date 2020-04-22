@@ -6,7 +6,7 @@
 using namespace std;
 vector<double> modulacja_amp(vector<double>y,vector<double>x)
 {
-    double kA=40;
+    double kA=90;
     vector<double>mod;
     for(int j=0;j<x.size();j++)
     {
@@ -63,6 +63,5 @@ int main() {
     {
         plik1<<mod_faz[i]<<","<<x[i]<<endl;
     }
-
     return 0;
 }
