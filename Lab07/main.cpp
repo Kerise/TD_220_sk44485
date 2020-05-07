@@ -186,6 +186,53 @@ string decode_BAMI(vector<int>BAMI)
     }
     return out;
 }
+vector<int> Manchester(vector<int>CLK,vector<double>TTL)
+{
+    vector<int>output;
+    int prev_ttl=2;
+    bool was_plus=false;
+    bool inicjacja=true;
+    int poprzedni_clk=1;
+    int ttl=0;
+    int value=0;
+    for(int i=1;i<CLK.size();i++)
+    {
+      if(CLK[i]!=poprzedni_clk)
+      {
+          ttl=TTL[i];
+          if(ttl==1 && inicjacja==true) {value=1;inicjacja=false;prev_ttl=ttl;}
+          if(prev_ttl==ttl && was_plus==false)
+          {
+              value=1;
+              prev_ttl=ttl;
+              was_plus=true;
+          }
+          else if(prev_ttl==ttl && was_plus==true)
+          {
+              value= -1;
+              prev_ttl=ttl;
+              was_plus=false;
+          }
+          else if(prev_ttl!=ttl)
+          {
+              prev_ttl =ttl;
+          }
+      }
+      poprzedni_clk=CLK[i];
+      output.push_back(value);
+    }
+    return output;
+}
+string decode_Manchester(vector<int>Man)
+{
+    string out;
+    for(int i=75;i<Man.size();i+=100)
+    {
+        if(Man[i]==1)out.push_back('1');
+        else if(Man[i]=-1)out.push_back('0');
+    }
+    return out;
+}
 int main() {
     cout<<"podaj ciag ascii"<<endl;
     string input;
@@ -228,9 +275,20 @@ int main() {
     {
         plik1<<bami[i]<<","<<i<<endl;
     }
+    plik1.close();
     string bami_decoded;
     bami_decoded=decode_BAMI(bami);
     cout<<bami_decoded<<endl;  //pierwszy bit zaklamany z powodu braku preambuły
-
+    vector<int>manchester;
+    manchester=Manchester(clk,bin);
+    plik1.open("Manchester.csv");
+    for(double i=0;i<manchester.size();i++)
+    {
+        plik1<<manchester[i]<<","<<i<<endl;
+    }
+    plik1.close();
+    string Man_decode;
+    Man_decode=decode_Manchester(manchester);
+    cout<<Man_decode<<endl; //decoded manchester
     return 0;
 }
