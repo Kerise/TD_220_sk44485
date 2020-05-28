@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <vector>
 #include <math.h>
-#include "kodowanie_kan.h"
+#include "Header.h"
 #define PI 3.14159265
 using namespace std;
 vector<double> ASK_nosny(int Tb)
@@ -17,7 +17,6 @@ vector<double> ASK_nosny(int Tb)
     double f=100;
     int wydluzenie=500;
     vector<double>out;
-    string::iterator it;
     float index=0;
     int ind=1;
     for(int i=0;i<Tb;i++)
@@ -37,7 +36,6 @@ vector<double> PSK_nosny(int Tb)
     double f=100;
     int wydluzenie=500;
     vector<double>out;
-    string::iterator it;
     float index=0;
     int ind=1;
     for(int i=0;i<Tb;i++)
@@ -57,7 +55,6 @@ vector<double> FSK_nosny1(int Tb)
     double f=100;
     int wydluzenie=500;
     vector<double>out;
-    string::iterator it;
     float index=0;
     int ind=1;
     for(int i=0;i<Tb;i++)
@@ -117,16 +114,45 @@ vector<double>calka(vector<double>funkcja,int Tb) {
     }
     return out;
 }
-vector<double>demodulacja(vector<double>funkcja,double limit,int Tb)
+vector<double>demodulacja1(vector<double>funkcja,double limit,int Tb)
 {
-    int h=limit;
+    double h=limit;
     vector<double>out;
     for(int i=0;i<funkcja.size();i++)
     {
         if(funkcja[i]>h) {out.push_back(0);
         }
         else {out.push_back(1);
+        }
+    }
+    cout<<"\n";
+    return out;
+}
+vector<double>demodulacja2(vector<double>funkcja,double limit,int Tb)
+{
+    double h=limit;
+    vector<double>out;
+    for(int i=0;i<funkcja.size();i++)
+    {
+        if(funkcja[i]>h) {out.push_back(1);
+        }
+        else {out.push_back(0);
                 }
+    }
+    cout<<"\n";
+    return out;
+}
+vector<double>demodulacja3(vector<double>funkcja,double limit,int Tb)
+{
+    double h=limit;
+    vector<double>out;
+    funkcja.erase(funkcja.begin());
+    for(int i=0;i<funkcja.size();i++)
+    {
+        if(funkcja[i-2]>h) {out.push_back(1);
+        }
+        else {out.push_back(0);
+        }
     }
     cout<<"\n";
     return out;
