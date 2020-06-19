@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/shadowchris/CLionProjects/DFT/main.cpp
+iostream
+-
+math.h
+-
+fstream
+-
+vector
+-
+cstdlib
+-
+ctime
+-
+
