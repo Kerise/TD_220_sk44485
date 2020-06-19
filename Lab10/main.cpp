@@ -4,9 +4,12 @@
 #include <vector>
 #include <sstream>
 #include <bitset>
+#include <ctime>
+#include <cstdlib>
 #include "Header.h"
 #define PI 3.14159265
 using namespace std;
+
 string BS2S(string in)
 {
     stringstream sstream(in);
@@ -23,6 +26,11 @@ string BS2S(string in)
 
 }
 int main() {
+    srand(time(0));
+    const static int q = 15;
+    const static float c1 = (1 << q) - 1;
+    const static float c2 = ((int)(c1 / 3)) + 1;
+    const static float c3 = 1.f / c1;
     int Tb;
     double fs = 1000;
     double A1 = 1.0;
@@ -55,6 +63,7 @@ int main() {
         }
 
     }
+
     cout << "kodowane_kan:" << h1 << endl;
     vector<double> ask;
     vector<double> psk;
@@ -62,6 +71,7 @@ int main() {
     ask = ASK(h1, A1, A0);
     psk = PSK(h1, fi1, fi2);
     fsk = FSK(h1, f1, f2);
+
     ofstream plik1;
     plik1.open("ask.csv");
     for (double i = 0; i < ask.size(); i++) {
@@ -78,7 +88,23 @@ int main() {
         plik1 << fsk[i] << "," << i << endl;
     }
     plik1.close();
+
     int N = ask.size();
+    vector<double> zA_szum;
+    vector<double> zF_szum;
+    vector<double> zP_szum;
+    float noise=0.f;
+    float random = 0.f;
+    double alfa=0.99;
+    for (int i = 0; i <N; i++)
+    {
+        random = ((float)rand() / (float)(RAND_MAX+1));
+        noise = (2.f * ((random * c2) + (random * c2) + (random * c2)) - 3.f * (c2 - 1.f)) * c3;
+
+        ask[i]=((ask[i] * alfa) + (noise * (1 - alfa)));
+        fsk[i]=((fsk[i] * alfa) + (noise * (1 - alfa)));
+        psk[i]=((psk[i] * alfa) + (noise * (1 - alfa)));
+    }
     vector<double> ask2;
     vector<double> psk2;
     vector<double> fsk2;
@@ -193,7 +219,7 @@ int main() {
     string encoded_ask;
     string encoded_psk;
     string encoded_fsk;
-    for (int i = 0; i < demo_ask.size(); i += Tb) {
+    for (int i = 0; i < demo_ask.size(); i += Tb+1) {
         if (demo_ask[i] == 1) {
             encoded_ask += "1";
         } else if (demo_ask[i] == 0) {
@@ -201,13 +227,14 @@ int main() {
         }
     }
     cout << "zdemodulowany ask:" << encoded_ask << endl;
-    for (int i = 0; i < demo_psk.size(); i += Tb) {
+    for (int i = 1; i < demo_psk.size(); i += Tb+1) {
         if (demo_psk[i] == 1) {
             encoded_psk += "1";
         } else if (demo_psk[i] == 0) {
             encoded_psk += "0";
         }
     }
+    encoded_psk+="0";
     cout<<"zdemodulowany psk:"<<encoded_psk<<endl;
 
     for(int i=0;i<demo_fsk.size();i+=Tb)
@@ -228,7 +255,9 @@ int main() {
     int a3=0;
     int ilosc_paczek=0;
     vector<int>package3;
-    string decoded_SECDED;
+    string decoded_SECDED_ask;
+    string decoded_SECDED_psk;
+    string decoded_SECDED_fsk;
     for(int i=0;i<=encoded_ask.size();i++)
     {
         if(a3<8)
@@ -238,21 +267,20 @@ int main() {
         }
         else{
             a3=0;
-            decoded_SECDED+=dekodowanie2(package3,ilosc_paczek);
+            decoded_SECDED_ask+=dekodowanie2(package3,ilosc_paczek);
             package3.clear();
             i--;
             ilosc_paczek++;
         }
     }
 
-    cout<<"odkodowane_SECDED_ask: "<<decoded_SECDED<<endl;
-    string final;
-    final=BS2S(decoded_SECDED);
-    cout<<"ASCI: "<<final<<endl;
+    cout<<"odkodowane_SECDED_ask: "<<decoded_SECDED_ask<<endl;
+    string final_ask;
+    final_ask=BS2S(decoded_SECDED_ask);
+    cout<<"ASCI: "<<final_ask<<endl;
     a3=0;
     ilosc_paczek=0;
     vector<int>package_psk;
-    decoded_SECDED="";
     for(int i=0;i<=encoded_psk.size();i++)
     {
         if(a3<8)
@@ -262,20 +290,19 @@ int main() {
         }
         else{
             a3=0;
-            decoded_SECDED+=dekodowanie2(package_psk,ilosc_paczek);
+            decoded_SECDED_psk+=dekodowanie2(package_psk,ilosc_paczek);
             package_psk.clear();
             i--;
             ilosc_paczek++;
         }
     }
-    cout<<"odkodowane_SECDED_psk: "<<decoded_SECDED<<endl;
-    final= "";
-    final=BS2S(decoded_SECDED);
-    cout<<"ASCI: "<<final<<endl;
+    cout<<"odkodowane_SECDED_psk: "<<decoded_SECDED_psk<<endl;
+    string final_psk;
+    final_psk=BS2S(decoded_SECDED_psk);
+    cout<<"ASCI: "<<final_psk<<endl;
     a3=0;
     ilosc_paczek=0;
     vector<int>package_fsk;
-    decoded_SECDED="";
     for(int i=0;i<=encoded_fsk.size();i++)
     {
         if(a3<8)
@@ -285,15 +312,44 @@ int main() {
         }
         else{
             a3=0;
-            decoded_SECDED+=dekodowanie2(package_fsk,ilosc_paczek);
+            decoded_SECDED_fsk+=dekodowanie2(package_fsk,ilosc_paczek);
             package_fsk.clear();
             i--;
             ilosc_paczek++;
         }
     }
-    cout<<"odkodowane_SECDED_fsk: "<<decoded_SECDED<<endl;
-    final= "";
-    final=BS2S(decoded_SECDED);
-    cout<<"ASCI: "<<final<<endl;
+    cout<<"odkodowane_SECDED_fsk: "<<decoded_SECDED_fsk<<endl;
+    string final_fsk;
+    final_fsk=BS2S(decoded_SECDED_fsk);
+    cout<<"ASCI: "<<final_fsk<<endl;
+    double counterA=0;
+    double counterF=0;
+    double counterP=0;
+            for(int i=0;i<binary.size();i++)
+            {
+                if(int(binary[i])!=int(decoded_SECDED_ask[i]))
+                {
+                    counterA++;
+                }
+            }
+    for(int i=0;i<binary.size();i++)
+    {
+        if(int(binary[i])!=int(decoded_SECDED_psk[i]))
+        {
+            counterP++;
+        }
+    }
+    for(int i=0;i<binary.size();i++)
+    {
+        if(int(binary[i])!=int(decoded_SECDED_fsk[i]))
+        {
+            counterF++;
+        }
+    }
+    cout << endl;
+    cout << "BER dla ASK: "<<(counterA/binary.size())*100 << endl;
+    cout << "BER dla PSK: "<<(counterP/binary.size())*100<< endl;
+    cout << "BER dla FSK: "<<(counterF/binary.size())*100<< endl;
+
     return 0;
 }
