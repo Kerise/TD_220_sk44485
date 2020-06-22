@@ -1,6 +1,7 @@
 //
 // Created by shadowchris on 20.05.2020.
 //
+/*
 #include <iostream>
 #include <string>
 #include <vector>
@@ -156,3 +157,4 @@ string dekodowanie2(vector<int>pack,int ktora)
     return out;
 }
 
+*/

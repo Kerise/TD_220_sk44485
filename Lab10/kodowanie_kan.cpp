@@ -1,11 +1,12 @@
 //
 // Created by shadowchris on 20.05.2020.
 //
+
 #include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>>
-#include "kodowanie_kan.h"
+#include "Header.h"
 using namespace std;
 string S2BS(string in,int switcher)
 {
@@ -83,7 +84,7 @@ string dekodowanie(vector<int>pack,int ktora) {
 
     if (n > 0)
     {
-        cout<<"Blad na "<<n+(7*ktora)<<" bicie"<<endl;
+        //cout<<"Blad na "<<n+(7*ktora)<<" bicie"<<endl;
         n--;
         if(pack[n]==49)pack[n]=48;
         else if(pack[n]==48)pack[n]=49;
@@ -122,7 +123,7 @@ string dekodowanie2(vector<int>pack,int ktora)
     p4=((int)pack[0]+(int)pack[1]+(int)pack[2]+(int)pack[3]+(int)pack[4]+(int)pack[5]+(int)pack[6])%2;
     if(pack[7]==48)a=0;
     if(pack[7]==49)a=1;
-    if(p4!=a)cout<<"50% szans na naprawe"<<endl;
+   // if(p4!=a)cout<<"50% szans na naprawe"<<endl;
     p1=(pack[0]+pack[2]+pack[4]+pack[6])%2;
     p2=(pack[1]+pack[2]+pack[5]+pack[6])%2;
     p3=(pack[3]+pack[4]+pack[5]+pack[6])%2;
@@ -130,7 +131,7 @@ string dekodowanie2(vector<int>pack,int ktora)
     n=p1*1+p2*2+p3*4;
     if(n>0)
     {
-        cout<<"Blad na "<<n+(7*ktora)<<" bicie"<<endl;
+       // cout<<"Blad na "<<n+(7*ktora)<<" bicie"<<endl;
         n--;
         if(pack[n]==49)pack[n]=48;
         else if(pack[n]==48)pack[n]=49;
@@ -145,12 +146,17 @@ string dekodowanie2(vector<int>pack,int ktora)
 
     } else
     {
-        ktora++;
+        /*ktora++;
         string kt=to_string(ktora);
         string error="Wystąpiły conajmnije 2 błedy!!\nPaczka "+kt;
         error+=" Odrzucona \n";
         cout<<error<<endl;
-        return " [x] ";
+       return "[x]";
+         */
+        out.push_back(pack[2]);
+        out.push_back(pack[4]);
+        out.push_back(pack[5]);
+        out.push_back(pack[6]);
 
     }
     return out;

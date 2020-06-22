@@ -18,7 +18,7 @@ vector<double> ASK_nosny(int Tb);
 vector<double>PSK_nosny(int Tb);
 vector<double> FSK_nosny1(int Tb);
 vector<double> FSK_nosny2(int Tb);
-vector<double> roznica(vector<double>x1,vector<double>x2);
+vector<double> roznica(vector<double> in1, vector<double> in2);
 vector<double> mnozenie(vector<double>ask_nosny,vector<double>ask);
 vector<double>calka(vector<double>funkcja,int Tb);
 vector<double>demodulacja1(vector<double>funkcja,double limit,int Tb);

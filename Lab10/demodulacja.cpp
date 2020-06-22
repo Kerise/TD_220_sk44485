@@ -1,7 +1,3 @@
-//
-// Created by shadowchris on 20.05.2020.
-//
-
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -11,6 +7,7 @@
 #include "Header.h"
 #define PI 3.14159265
 using namespace std;
+
 vector<double> ASK_nosny(int Tb)
 {
     double A2=8;
@@ -41,7 +38,7 @@ vector<double> PSK_nosny(int Tb)
     for(int i=0;i<Tb;i++)
     {
         for(int i=0;i<wydluzenie;i++) {
-            out.push_back(A2 * sin(2 * PI * f * index + M_PI));
+            out.push_back(A2 * sin(2 * PI * f * index + PI));
             index = index + 0.00002;
         }
         ind++;
@@ -88,6 +85,7 @@ vector<double> FSK_nosny2(int Tb)
     return out;
 
 }
+
 vector<double> mnozenie(vector<double>ask_nosny,vector<double>ask) {
     int size = ask.size();
     vector<double>out;
@@ -137,7 +135,7 @@ vector<double>demodulacja2(vector<double>funkcja,double limit,int Tb)
         if(funkcja[i]>h) {out.push_back(1);
         }
         else {out.push_back(0);
-                }
+        }
     }
     cout<<"\n";
     return out;
@@ -145,11 +143,12 @@ vector<double>demodulacja2(vector<double>funkcja,double limit,int Tb)
 vector<double>demodulacja3(vector<double>funkcja,double limit,int Tb)
 {
     double h=limit;
+
     vector<double>out;
     funkcja.erase(funkcja.begin());
     for(int i=0;i<funkcja.size();i++)
     {
-        if(funkcja[i-2]>h) {out.push_back(1);
+        if(funkcja[i]>h) {out.push_back(1);
         }
         else {out.push_back(0);
         }
