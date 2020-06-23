@@ -26,41 +26,6 @@ string BS2S(string in)
     return output;
 
 }
-vector<vector<double>> hammingTransform(vector<double> data)
-{
-    int N=data.size();
-    int fs = N / 500;
-    int count0;
-    int count1;
-    vector<double> protoHamming;
-    for (size_t i = 0; i < data.size() / fs; i++)
-    {
-        count0 = 0;
-        count1 = 0;
-        for (size_t j = 0; j < fs; j++)
-        {
-            if (data[j + (fs * i)] == 0)
-                count0++;
-            else
-                count1++;
-        }
-        if (count0 > count1)
-            protoHamming.push_back(0);
-        else
-            protoHamming.push_back(1);
-    }
-
-    vector<vector<double>> sygnalyHamming;
-    for (size_t i = 0; i < protoHamming.size()/7; i++)
-    {
-        sygnalyHamming.push_back(vector<double>());
-        for (size_t j = 0; j < 7; j++)
-        {
-            sygnalyHamming[i].push_back(protoHamming[j+(i*7)]);
-        }
-    }
-    return sygnalyHamming;
-}
 int main() {
     srand(time(0));
     const static int q = 15;
@@ -131,12 +96,11 @@ int main() {
     vector<double> zP_szum;
     float noise=0.f;
     float random = 0.f;
-    double alfa=0.8;
+    double alfa=0.1;
     for (int i = 0; i <N; i++)
     {
         random = ((float)rand() / (float)(RAND_MAX+1));
         noise = (2.f * ((random * c2) + (random * c2) + (random * c2)) - 3.f * (c2 - 1.f)) * c3;
-
         ask[i]=((ask[i] * alfa) + (noise * (1 - alfa)));
         fsk[i]=((fsk[i] * alfa) + (noise * (1 - alfa)));
         psk[i]=((psk[i] * alfa) + (noise * (1 - alfa)));
@@ -233,14 +197,11 @@ int main() {
     vector<double> demo_ask;
     vector<double> demo_psk;
     vector<double> demo_fsk;
-    demo_ask = demodulacja1(caleczka_ask,0,Tb);
+    demo_ask = demodulacja1(caleczka_ask,0.4,Tb);
     demo_psk = demodulacja2(caleczka_psk,0,Tb);
     demo_fsk = demodulacja3(caleczka_fsk,0.2,Tb);
-    vector<vector<double>> demo_ask2=hammingTransform(demo_ask);
-    vector<vector<double>> demo_psk2=hammingTransform(demo_psk);
-    vector<vector<double>> demo_fsk2=hammingTransform(demo_fsk);
     plik1.open("demodulowany_ask.csv");
-    for (double i = 1; i < demo_ask.size(); i++) {
+    for (double i = 0; i < demo_ask.size(); i++) {
         plik1 << demo_ask[i] << "," << i << endl;
     }
     plik1.close();
@@ -259,10 +220,12 @@ int main() {
     string encoded_ask;
     string encoded_psk;
     string encoded_fsk;
-    for (int i = 0; i < demo_ask.size(); i += Tb+1) {
-        if (demo_ask[i] == 1) {
+    int index;
+    for (int i = 0; i < demo_ask.size(); i +=Tb) {
+        index=i+52;
+        if (demo_ask[index] == 1) {
             encoded_ask += "1";
-        } else if (demo_ask[i] == 0) {
+        } else if (demo_ask[index] == 0) {
             encoded_ask += "0";
         }
     }
@@ -277,7 +240,6 @@ int main() {
     encoded_psk+="0";
     cout<<"'\nzdemodulowany psk:"<<encoded_psk<<endl;
     cout<<Tb;
-    int index;
     for(int i=0;i<demo_fsk.size();i+=Tb)
     {
         index=i-2;
@@ -292,29 +254,6 @@ int main() {
         }
     }
 
-/*int count1=0;
-    int count0=0;
-    for (int i = 0; i < demo_fsk.size(); i++)
-    {
-
-
-        if (demo_fsk[i] == 0)
-            count0++;
-        else
-            count1++;
-
-
-        if (((i + 1) % Tb) == 0) {
-            if (count0 > count1)
-                encoded_fsk += "0";
-            else
-                encoded_fsk += "1";
-
-            count1 = 0;
-            count0 = 0;
-        }
-    }
-    */
     encoded_fsk.erase(encoded_fsk.begin());
     encoded_fsk.push_back(48);
     cout<<"\nzdemodulowany fsk:"<<encoded_fsk<<endl;

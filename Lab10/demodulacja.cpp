@@ -10,7 +10,7 @@ using namespace std;
 
 vector<double> ASK_nosny(int Tb)
 {
-    double A2=8;
+    double A2=1;
     double f=100;
     int wydluzenie=500;
     vector<double>out;
